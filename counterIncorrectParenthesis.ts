@@ -1,26 +1,68 @@
 
 type Parenthesis = '('|')'|'['|']'|'{'|'}';
-class Stack {
-  private stack: Array<Parenthesis>;
+
+class Node {
+  value: any;
+  next: Node | null;
+
+  constructor(value: any){
+    this.value = value;
+    this.next = null;
+  }
+}
+
+export class Stack {
+  private first: Node|null;
+  private last: Node|null;
+  private sizeCounter = 0;
 
   constructor() {
-    this.stack = [];
+    this.first = null;
+    this.last = null;
   }
 
-  push(value: Parenthesis) {
-    this.stack.push(value);
+  push(value: any) {
+    const newNode = new Node(value);
+    if (this.first === null) {
+      this.first = newNode;
+      this.last = newNode;
+    } else {
+      newNode.next = this.first;
+      this.first = newNode;
+    }
+    this.sizeCounter++;
   }
 
   pop(){
-    return this.stack.pop();
+    if (!this.first) {
+      return null;
+    } else {
+      let value = this.first.value;
+      if (this.first === this.last) {
+        this.last = null;
+        this.first = null;
+      } else {
+        let temp = this.first;
+        this.first = this.first.next;
+        temp.next = null;
+      }
+      this.sizeCounter--;
+      return value;
+    }
   }
 
   peek(){
-    return this.stack[this.stack.length-1];
+    return this.first === null ? null : this.first.value;
   }
 
   size(){
-    return this.stack.length;
+    return this.sizeCounter;
+  }
+
+  clear() {
+    this.sizeCounter = 0;
+    this.first = null;
+    this.last =  null;
   }
 
 }
